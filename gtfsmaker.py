@@ -1,7 +1,7 @@
-# ha valami baj van vele: akos.ducz@gmail.com
 
 import secrets
 import shutil
+import math
 
 def randhex():
 	s = ""
@@ -18,6 +18,22 @@ stopid = 1
 agency_txt = """agency_name,agency_url,agency_timezone,agency_lang,agency_phone
 Your Transit Agency,http://www.yourtransitagency.com,America/New_York,en,22-555-305764
 """
+
+def times():
+	stopslist = list(stops.values())
+	for i in range(len(stopslist)):
+		for j in range(i+1, len(stopslist)):
+			lat1 = float(stopslist[i]["lat"])
+			lat2 = float(stopslist[j]["lat"])
+			lon1 = float(stopslist[i]["lon"])
+			lon2 = float(stopslist[j]["lon"])
+
+			deltaLat = abs(lat1 - lat2) * 110.574
+			deltaLon = abs(lon1 * 111.320 * math.cos(lat1) - lon2 * 111.320 * math.cos(lat2))
+
+			dist = math.sqrt(deltaLat*deltaLat + deltaLon*deltaLon)
+
+			print(stopslist[i]["name"] + " <-> " + stopslist[j]["name"] + " : " + str(dist / 40) + "h" )
 
 def export():
 	f = open("arrange/agency.txt", "w+")
@@ -72,6 +88,7 @@ def printhelp():
 	print("* nl <linename> <stop1> <stop2>... : add new line through stops")
 	print("* ds <stopname> : delete stop")
 	print("* dl <linename> : delete line")
+	print("* times : get time distance between every pair of stops")
 	print("* exp : export to zip")
 	print("* (Note: input correctness is NOT checked!)")
 
@@ -107,6 +124,8 @@ while True:
 			del lines[toks[1]]
 		elif toks[0] == "exp":
 			export()
+		elif toks[0] == "times":
+			times()
 		else:
 			print("unknown command!")
 			printhelp()
