@@ -3,11 +3,14 @@ import secrets
 import shutil
 import math
 
-def randhex():
-	s = ""
-	for i in range(6):
-		s += secrets.choice("0123456789ABCDEF")
-	return s
+def randhex(name):
+    if (name[0] == "P"):
+        s = "009EE3"
+    else:
+        s = "25BE28"
+#	for i in range(6):
+#		s += secrets.choice("0123456789ABCDEF")
+    return s
 
 stops = {}
 lines = {}
@@ -43,7 +46,8 @@ def export():
 	f = open("arrange/routes.txt", "w+")
 	f.write("route_id,route_short_name,route_long_name,route_type,route_color\n")
 	for line in lines.values():
-		f.write("R" + str(line["id"]) + "," + "L" + str(line["id"]) + "," + line["name"] + ",1," + randhex() + "\n")
+#		f.write("R" + str(line["id"]) + "," + "L" + str(line["id"]) + "," + line["name"] + ",1," + randhex() + "\n")
+		f.write("R" + str(line["id"]) + "," + line["name"] + "," + line["name"] + ",1," + randhex(line["name"]) + "\n")
 	f.close()
 
 	f = open("arrange/stops.txt", "w+")
